@@ -7,7 +7,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 
 /// Signature for the callback that's called when a [InnerDrawer] is
 /// opened or closed.
@@ -252,14 +251,10 @@ class InnerDrawerState extends State<InnerDrawer>
 
   /// get width of screen after initState
   void _updateWidth() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      final RenderBox? box =
-          _drawerKey.currentContext!.findRenderObject() as RenderBox?;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final RenderBox? box = _drawerKey.currentContext!.findRenderObject() as RenderBox?;
       //final RenderBox box = context.findRenderObject();
-      if (box != null &&
-          box.hasSize &&
-          box.size != null &&
-          box.size.width > 300)
+      if (box != null && box.hasSize && box.size.width > 300)
         setState(() {
           _initWidth = box.size.width;
         });
@@ -297,6 +292,7 @@ class InnerDrawerState extends State<InnerDrawer>
       case InnerDrawerDirection.start:
         delta = -delta;
         break;
+      default:
     }
     switch (Directionality.of(context)) {
       case TextDirection.rtl:
@@ -325,6 +321,7 @@ class InnerDrawerState extends State<InnerDrawer>
         case InnerDrawerDirection.start:
           visualVelocity = -visualVelocity;
           break;
+        default:
       }
       switch (Directionality.of(context)) {
         case TextDirection.rtl:
@@ -368,8 +365,9 @@ class InnerDrawerState extends State<InnerDrawer>
         return AlignmentDirectional.centerEnd;
       case InnerDrawerDirection.end:
         return AlignmentDirectional.centerStart;
+      default:
+        return null;
     }
-    return null;
   }
 
   /// Inner Alignment
@@ -379,8 +377,9 @@ class InnerDrawerState extends State<InnerDrawer>
         return AlignmentDirectional.centerStart;
       case InnerDrawerDirection.end:
         return AlignmentDirectional.centerEnd;
+      default:
+        return null;
     }
-    return null;
   }
 
   /// returns the left or right animation type based on InnerDrawerDirection
@@ -432,9 +431,7 @@ class InnerDrawerState extends State<InnerDrawer>
     final Widget? invC = _invisibleCover();
 
     final Widget scaffoldChild = Stack(
-      children: <Widget?>[widget.scaffold, invC != null ? invC : null]
-          .where((a) => a != null)
-          .toList() as List<Widget>,
+      children: <Widget?>[widget.scaffold, invC != null ? invC : null].where((a) => a != null).toList().cast<Widget>(),
     );
 
     Widget container = Container(
@@ -617,7 +614,7 @@ class InnerDrawerState extends State<InnerDrawer>
                   ///Trigger
                   _trigger(AlignmentDirectional.centerStart, _leftChild),
                   _trigger(AlignmentDirectional.centerEnd, _rightChild),
-                ].where((a) => a != null).toList() as List<Widget>,
+                ].where((a) => a != null).toList().cast<Widget>(),
               ),
             ),
           ),
